@@ -1,0 +1,99 @@
+{
+  "nbformat": 4,
+  "nbformat_minor": 0,
+  "metadata": {
+    "colab": {
+      "provenance": [],
+      "authorship_tag": "ABX9TyMyYIAaFeoJJqPLlYGSftdC",
+      "include_colab_link": true
+    },
+    "kernelspec": {
+      "name": "python3",
+      "display_name": "Python 3"
+    },
+    "language_info": {
+      "name": "python"
+    }
+  },
+  "cells": [
+    {
+      "cell_type": "markdown",
+      "metadata": {
+        "id": "view-in-github",
+        "colab_type": "text"
+      },
+      "source": [
+        "<a href=\"https://colab.research.google.com/github/Arsen-Almasov/Operating-System/blob/main/fork_demo.py\" target=\"_parent\"><img src=\"https://colab.research.google.com/assets/colab-badge.svg\" alt=\"Open In Colab\"/></a>"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "execution_count": null,
+      "metadata": {
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        },
+        "id": "uFz3hxhS_B0j",
+        "outputId": "9098a304-dbc8-40e5-d0a8-93fd8f1129bf"
+      },
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Writing fork_demo.py\n"
+          ]
+        }
+      ],
+      "source": [
+        "%%writefile fork_demo.py\n",
+        "import os\n",
+        "\n",
+        "pid = os.fork()\n",
+        "\n",
+        "if pid == 0:\n",
+        "    # Дочерний процесс\n",
+        "    print(\n",
+        "        f\"Я ребёнок, PID={os.getpid()}, \"\n",
+        "        f\"PPID={os.getppid()}\",\n",
+        "        flush=True,\n",
+        "    )\n",
+        "    os._exit(0)\n",
+        "else:\n",
+        "    # Родительский процесс\n",
+        "    child_pid, status = os.wait()\n",
+        "    exit_code = os.waitstatus_to_exitcode(status)\n",
+        "\n",
+        "    print(f\"Я родитель, PID={os.getpid()}\")\n",
+        "    print(f\"Дождался ребёнка PID={child_pid}\")\n",
+        "    print(f\"Код завершения ребёнка: {exit_code}\")"
+      ]
+    },
+    {
+      "cell_type": "code",
+      "source": [
+        "!python fork_demo.py"
+      ],
+      "metadata": {
+        "id": "TKJmTfnb_Na2",
+        "outputId": "9236057b-9367-46ae-8e85-ee4d7c239b1c",
+        "colab": {
+          "base_uri": "https://localhost:8080/"
+        }
+      },
+      "execution_count": null,
+      "outputs": [
+        {
+          "output_type": "stream",
+          "name": "stdout",
+          "text": [
+            "Я ребёнок, PID=1593, PPID=1591\n",
+            "Я родитель, PID=1591\n",
+            "Дождался ребёнка PID=1593\n",
+            "Код завершения ребёнка: 0\n"
+          ]
+        }
+      ]
+    }
+  ]
+}
