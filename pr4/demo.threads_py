@@ -1,0 +1,56 @@
+import os
+
+# Создаем директорию, если она не существует
+os.makedirs('/content/pr4', exist_ok=True)
+
+code = """import threading
+
+counter = 0
+ITERATIONS = 100_000
+THREADS = 4
+
+
+def worker(thread_id):
+    global counter
+
+    for _ in range(ITERATIONS):
+        counter += 1
+
+
+def run_experiment():
+    global counter
+    counter = 0
+
+    threads = [
+        threading.Thread(target=worker, args=(i,))
+        for i in range(THREADS)
+    ]
+
+    # Сначала запускаем все потоки
+    for thread in threads:
+        thread.start()
+
+    # Затем ждём завершения всех потоков
+    for thread in threads:
+        thread.join()
+
+    return counter
+
+
+if __name__ == "__main__":
+    print("Эксперимент с четырьмя потоками")
+    for run in range(1, 6):
+        result = run_experiment()
+        print(f"Запуск {run}: counter = {result}")
+"""
+
+with open('/content/pr4/threads_demo.py', 'w', encoding='utf-8') as f:
+    f.write(code)
+!python /content/pr4/threads_demo.py
+Эксперимент с четырьмя потоками
+Запуск 1: counter = 400000
+Запуск 2: counter = 400000
+Запуск 3: counter = 400000
+Запуск 4: counter = 400000
+Запуск 5: counter = 400000
+print("Файл /content/pr4/threads_demo.py успешно записан!")
