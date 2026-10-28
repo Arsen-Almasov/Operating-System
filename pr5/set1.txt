@@ -1,0 +1,27 @@
+import sys
+sys.path.insert(0, str(PROJECT))
+import sched
+
+processes = sched.load_processes(str(PROJECT / "set1.txt"))
+expected = {
+    "fcfs": (8.75, 15.25),
+    "sjf": (7.75, 14.25),
+    "srtf": (6.50, 13.00),
+    "rr": (13.50, 20.00),
+    "priority": (10.75, 17.25),
+}
+
+check_rows = []
+for algo in ["fcfs", "sjf", "srtf", "rr", "priority"]:
+    intervals = sched.rr(processes, 3) if algo == "rr" else sched.ALGORITHMS[algo](processes)
+    _, avg = sched.calculate_metrics(processes, intervals)
+    ew, et = expected[algo]
+    check_rows.append({
+        "Алгоритм": algo.upper(),
+        "Ожидание (получено)": round(avg["waiting"], 2),
+        "Ожидание (эталон)": ew,
+        "Оборот (получено)": round(avg["turnaround"], 2),
+        "Оборот (эталон)": et,
+        "Совпало": abs(avg["waiting"]-ew) < 1e-9 and abs(avg["turnaround"]-et) < 1e-9
+    })
+display(pd.DataFrame(check_rows))
