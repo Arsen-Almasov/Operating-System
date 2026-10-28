@@ -1,0 +1,28 @@
+import os
+import time
+import threading
+
+def wait_worker():
+    time.sleep(3)
+
+threads = [
+    threading.Thread(target=wait_worker)
+    for _ in range(4)
+]
+
+for t in threads:
+    t.start()
+
+# Пока потоки работают, проверяем состояние процесса
+with open("/proc/self/status", encoding="utf-8") as f:
+    for line in f:
+        if line.startswith(("Pid:", "Threads:")):
+            print(line.strip())
+
+print("TID каталогов:", os.listdir("/proc/self/task"))
+
+for t in threads:
+    t.join()
+    Pid:	889
+Threads:	14
+TID каталогов: ['889', '893', '894', '895', '896', '897', '898', '899', '900', '905', '910', '911', '912', '913']
