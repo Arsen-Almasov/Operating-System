@@ -1,0 +1,19 @@
+import os
+
+os.makedirs('/content/pr4', exist_ok=True)
+
+with open('/content/pr4/.gitignore', 'w') as f:
+    f.write('''data/numbers.txt
+data/http_files/
+__pycache__/
+*.pyc''')
+import os
+
+for root, dirs, files in os.walk("/content/pr4"):
+    dirs[:] = [d for d in dirs if d != "__pycache__"]
+    level = root.replace("/content/pr4", "").count(os.sep)
+    print("  " * level + os.path.basename(root) + "/")
+    for name in files:
+        print("  " * (level + 1) + name)
+pr4/
+  .gitignore
