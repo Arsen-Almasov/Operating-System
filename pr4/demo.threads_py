@@ -46,6 +46,9 @@ if __name__ == "__main__":
 
 with open('/content/pr4/threads_demo.py', 'w', encoding='utf-8') as f:
     f.write(code)
+
+print("Файл /content/pr4/threads_demo.py успешно записан!")
+
 !python /content/pr4/threads_demo.py
 Эксперимент с четырьмя потоками
 Запуск 1: counter = 400000
