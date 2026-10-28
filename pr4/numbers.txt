@@ -1,0 +1,20 @@
+%%writefile /content/pr4/generate_numbers.py
+import random
+from pathlib import Path
+
+OUTPUT = Path(__file__).parent / "data" / "numbers.txt"
+COUNT = 10_000_000
+
+def main():
+    OUTPUT.parent.mkdir(parents=True, exist_ok=True)
+
+    with OUTPUT.open("w", encoding="utf-8") as file:
+        for _ in range(COUNT):
+            file.write(f"{random.randint(0, 1_000_000)}\n")
+
+    print(f"Создан файл: {OUTPUT}")
+    print(f"Количество чисел: {COUNT}")
+
+if __name__ == "__main__":
+    main()
+Writing /content/pr4/generate_numbers.py
