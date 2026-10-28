@@ -21,6 +21,14 @@ for algo in ["fcfs", "sjf", "srtf", "rr", "priority"]:
         "Ожидание (получено)": round(avg["waiting"], 2),
         "Ожидание (эталон)": ew,
         "Оборот (получено)": round(avg["turnaround"], 2),
+
+algo = "srtf"  # поменяй на fcfs, sjf, srtf, rr или priority
+processes = sched.load_processes(str(PROJECT / "set1.txt"))
+intervals = sched.rr(processes, 3) if algo == "rr" else sched.ALGORITHMS[algo](processes)
+print(sched.gantt_text(intervals))
+stats, averages = sched.calculate_metrics(processes, intervals)
+display(pd.DataFrame(stats).T)
+print("Средние метрики:", {k: round(v, 2) for k, v in averages.items()})
         "Оборот (эталон)": et,
         "Совпало": abs(avg["waiting"]-ew) < 1e-9 and abs(avg["turnaround"]-et) < 1e-9
     })
